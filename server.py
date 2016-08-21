@@ -58,10 +58,9 @@ class ESP8266UpdateHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-Type', 'application/octet-stream')
         self.send_header('Content-Disposition', 'attachment; filename=%s' % os.path.basename(bin_path))
-        #se
-        # TODO: write out file and md5
-
-
-        
-
-
+        self.send_header('X-MD5', md5sum)
+        self.send_header('Content-Length', os.path.getsize(bin_path))
+        self.end_headers()
+        with open(bin_path) as bin_fh:
+            self.wfile.write(bin_fh.read())
+        return
